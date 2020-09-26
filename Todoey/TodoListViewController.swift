@@ -17,21 +17,20 @@ class TodoListViewController: UITableViewController {
         // Do any additional setup after loading the view.
     }
     
+    // Sets the number of rows in the tableView
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
     }
     
+    // Sets the cell properties for the cell at row
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // Get the string in the array at the current row
-        let item = itemArray[indexPath.row]
         
-        // Get the cell at the current row
+        // Reuse an already made UITableViewCell at the indexPath (indexPath == current row)
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        // Set the cell text to the item text
-        cell.textLabel?.text = item
+        // Set the cell text to the item text at the current row.
+        cell.textLabel?.text = itemArray[indexPath.row]
         
-        // Return the cell
         return cell
     }
 }
