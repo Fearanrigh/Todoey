@@ -10,8 +10,8 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    let itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
-
+    var itemArray = ["Find Mike", "Buy Eggos", "Destroy Demogorgon"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -34,9 +34,8 @@ class TodoListViewController: UITableViewController {
         return cell
     }
     
+    //MARK - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(itemArray[indexPath.row])
-        
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
         } else {
@@ -44,6 +43,37 @@ class TodoListViewController: UITableViewController {
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    //MARK - Add New Items
+    /**
+     Adds a button to the main todo list title bar allowing the addition of another list item.
+     */
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
+        // Block scope variable to transfer text from the alert UI to the action UI
+        var textField = UITextField()
+        
+        // Creates the top-level window to add an item
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+             
+        // Creates a UITextField within the alert window to enter the name of an item to add
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Enter new item here"
+            textField = alertTextField
+        }
+        
+        // The action to take within the alert window
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            // What will happen once the user clicks the Add Item button on our UIAlert
+            self.itemArray.append(textField.text!)
+            self.tableView.reloadData()
+        }
+        
+        // Adds the desired action to the alert window
+        alert.addAction(action)
+        
+        // Shows the alert window
+        present(alert, animated: true, completion: nil )
     }
 }
