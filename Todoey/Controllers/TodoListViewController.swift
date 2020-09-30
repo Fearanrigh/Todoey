@@ -49,11 +49,8 @@ class TodoListViewController: UITableViewController {
         // Set the cell text to the item text at the current row.
         cell.textLabel?.text = item.title
         
-        if item.done == true {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
+        // Make the accessory type dependent on the done value of item using ternary operator
+        cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
     }
@@ -61,6 +58,7 @@ class TodoListViewController: UITableViewController {
     //MARK - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done // Toggle the done property
+        // TODO: The deselection is no longer animated with the reloadData below.
         tableView.deselectRow(at: indexPath, animated: true)
         tableView.reloadData() // Reload the table to see the checkmarks
     }
