@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("didFinishLaunchingWithOptions")
         
         // Path to the user defaults app
-        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
+//        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
         
         return true
     }
