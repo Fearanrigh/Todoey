@@ -12,10 +12,13 @@ class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    let defaults = UserDefaults.standard
+    // The location of where to save the item list data.
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //    print(dataFilePath)
         
         let newItem = Item()
         newItem.title = "Find Mike"
@@ -29,7 +32,7 @@ class TodoListViewController: UITableViewController {
         newItem3.title = "Destroy Demogorgon"
         itemArray.append(newItem3)
 
-//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+//        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
 //            itemArray = items
 //        }
     }
@@ -58,9 +61,12 @@ class TodoListViewController: UITableViewController {
     //MARK - TableView Delegate Methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done // Toggle the done property
+        
+        // Save items created to database
+        saveItems()
+        
         // TODO: The deselection is no longer animated with the reloadData below.
-        tableView.deselectRow(at: indexPath, animated: true)
-        tableView.reloadData() // Reload the table to see the checkmarks
+//        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     //MARK - Add New Items
@@ -89,8 +95,9 @@ class TodoListViewController: UITableViewController {
             newItem.title = textField.text!
             
             self.itemArray.append(newItem)
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
-            self.tableView.reloadData()
+            
+            // Save the items created to database
+            self.saveItems()
         }
         
         // Adds the desired action to the alert window
@@ -98,5 +105,25 @@ class TodoListViewController: UITableViewController {
         
         // Shows the alert window
         present(alert, animated: true, completion: nil )
+    }
+    
+    
+    //MARK - Model manipulation methods
+    
+    /**
+     Encodes the itemArray with it's Item class objects and puts it in data,
+     then writes this data to the location at dataFilePath
+     */
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error encoding item array, \(error)")
+        }
+        
+        self.tableView.reloadData()
     }
 }
