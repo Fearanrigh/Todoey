@@ -15,6 +15,8 @@ class TodoListViewController: UITableViewController {
     // The location of where to save the item list data.
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
+    let persistenceController = PersistenceController.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
