@@ -45,7 +45,7 @@ class TodoListViewController: UITableViewController {
         return cell
     }
     
-    //MARK - TableView Delegate Methods
+    //MARK: - TableView delegate methods
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // The following code removes the item from the database and list when clicked.
@@ -61,7 +61,7 @@ class TodoListViewController: UITableViewController {
 //        tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    //MARK - Add New Items
+    //MARK: - Add new items
     /**
      Adds a button to the main todo list title bar allowing the addition of another list item.
      */
@@ -100,7 +100,7 @@ class TodoListViewController: UITableViewController {
     }
     
     
-    //MARK - Model manipulation methods
+    //MARK: - Model manipulation methods
     
     /**
      Encodes the itemArray with it's Item class objects and puts it in data,
@@ -117,12 +117,29 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    func loadItems() {
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
         do {
             itemArray = try context.fetch(request)
         } catch {
             print("Error fetching data from context, \(error)")
         }
+        
+        tableView.reloadData()
+    }
+}
+
+//MARK: - Search bar methods
+extension TodoListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        // The search is case and diacritic insensitive ([cd])
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        loadItems(with: request)
+        
     }
 }
